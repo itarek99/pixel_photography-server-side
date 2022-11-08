@@ -42,7 +42,10 @@ const run = async () => {
     });
 
     app.get('/reviews', async (req, res) => {
-      const cursor = reviewCollection.find({});
+      const { service_id } = req.query;
+      const query = { service_id };
+
+      const cursor = reviewCollection.find(query);
       const reviews = await cursor.toArray();
       res.send(reviews);
     });
