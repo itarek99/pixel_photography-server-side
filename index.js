@@ -42,15 +42,17 @@ const run = async () => {
     });
 
     app.get('/reviews', async (req, res) => {
-      const { service_id } = req.query;
-      if (!service_id) {
-        const cursor = reviewCollection.find({});
+      const { service_id, email } = req.query;
+
+      if (service_id) {
+        const query = { service_id };
+        const cursor = reviewCollection.find(query);
         const reviews = await cursor.toArray();
         res.send(reviews);
       }
 
-      if (service_id) {
-        const query = { service_id };
+      if (email) {
+        const query = { email };
         const cursor = reviewCollection.find(query);
         const reviews = await cursor.toArray();
         res.send(reviews);
