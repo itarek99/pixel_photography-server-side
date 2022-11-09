@@ -2,6 +2,7 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
+var jwt = require('jsonwebtoken');
 
 const port = process.env.PORT || 5000;
 const app = express();
@@ -15,6 +16,8 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true,
   serverApi: ServerApiVersion.v1,
 });
+
+const verifyJWT = async (req, res, next) => {};
 
 const run = async () => {
   try {
@@ -70,7 +73,7 @@ const run = async () => {
     app.post('/reviews', async (req, res) => {
       const review = req.body;
       const result = await reviewCollection.insertOne(review);
-      console.log(result);
+      res.send(result);
     });
 
     app.delete('/orders/:id', async (req, res) => {
