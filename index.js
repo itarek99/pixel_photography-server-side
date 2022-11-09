@@ -34,6 +34,13 @@ const run = async () => {
       }
     });
 
+    app.post('/services', async (req, res) => {
+      const service = req.body;
+      const serviceWithTime = { ...service, created_at: new Date().getTime() };
+      const result = await servicesCollection.insertOne(serviceWithTime);
+      res.send(result);
+    });
+
     app.get('/services/:id', async (req, res) => {
       const { id } = req.params;
       const query = { _id: ObjectId(id) };
