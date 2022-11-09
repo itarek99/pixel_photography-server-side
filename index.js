@@ -28,7 +28,8 @@ const run = async () => {
         const services = await cursor.toArray();
         res.send(services);
       } else {
-        const cursor = servicesCollection.find({});
+        const descendingSort = { created_at: -1 };
+        const cursor = servicesCollection.find({}).sort(descendingSort);
         const services = await cursor.limit(+size).toArray();
         res.send(services);
       }
