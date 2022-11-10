@@ -18,20 +18,21 @@ const client = new MongoClient(uri, {
 });
 
 const verifyJWT = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
+  const authHeader = await req.headers.authorization;
   if (!authHeader) {
     return res.status(401).send({ message: 'unauthorized access' });
-  }
-  const token = await authHeader.split(' ')[1];
+  } else {
+    const token = await authHeader.split(' ')[1];
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decoded) => {
-    if (err) {
-      console.log(err);
-      return await res.status(403).send({ message: 'forbidden access' });
-    }
-    req.decoded = decoded;
-    next();
-  });
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decoded) => {
+      if (err) {
+        console.log(err);
+        return await res.status(403).send({ message: 'forbidden access' });
+      }
+      req.decoded = decoded;
+      next();
+    });
+  }
 };
 
 const run = async () => {
@@ -79,7 +80,7 @@ const run = async () => {
 
       if (email) {
         if (decoded.email !== req.query.email) {
-          res.status(401).send({ message: 'unauthorized access' });
+          return res.status(401).send({ message: 'unauthorized access' });
         }
         let query = { email };
         const cursor = reviewCollection.find(query).sort({ created_at: -1 });
@@ -138,7 +139,7 @@ const run = async () => {
 run().catch((err) => console.error(err));
 
 app.get('/', (req, res) => {
-  res.send('gf server is running');
+  res.send('pixel photography server is running');
 });
 
 app.listen(port, console.log(`server is running on port: ${port}`));
